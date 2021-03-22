@@ -1,0 +1,4 @@
+<launch>
+    <param name="serial_port_name" type="string" value="/dev/ttyTHS2"/>
+    <node pkg="serial" name="serial" type="serial_node" output="screen"/>
+</launch>

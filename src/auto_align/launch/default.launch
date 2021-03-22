@@ -1,0 +1,4 @@
+<launch>
+    <param name="align_kp" type="double" value="1.5"/>
+    <node pkg="auto_align" name="auto_align" type="auto_align_node" output="screen" />
+</launch>

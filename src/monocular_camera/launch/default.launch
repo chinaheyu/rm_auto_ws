@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="monocular_camera" name="monocular_camera" type="monocular_camera_node" output="screen" />
+</launch>

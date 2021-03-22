@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="flow_control" name="flow_control" type="flow_control_node.py" output="screen" />
+</launch>
