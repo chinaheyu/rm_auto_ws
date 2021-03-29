@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="observer" name="observer" type="observer_node.py" output="screen" />
+</launch>

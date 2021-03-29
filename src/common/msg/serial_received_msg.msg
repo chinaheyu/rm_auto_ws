@@ -5,3 +5,7 @@ float32 z_gyro
 float32 x_accel
 float32 y_accel
 float32 z_accel
+float32 x_quat
+float32 y_quat
+float32 z_quat
+float32 w_quat

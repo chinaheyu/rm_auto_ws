@@ -8,8 +8,9 @@ from sensor_msgs.msg import Imu
 from std_msgs.msg import Bool
 
 
-class ROSBase:
+class ROSBase(object):
     def __init__(self) -> None:
+        super().__init__()
         rospy.init_node("flow_control")
 
     def echo(self, message: str) -> None:
@@ -20,8 +21,9 @@ class ROSBase:
         return rospy.is_shutdown()
 
 
-class ActionBase:
+class ActionBase(object):
     def __init__(self) -> None:
+        super().__init__()
         self.__act_pub = rospy.Publisher('/cmd_action', cmd_action, queue_size=10)
         self.__grasp_state = False
         self.__push_state = False
@@ -79,8 +81,9 @@ class ActionBase:
         self.__publish_act_msg()
 
 
-class BeltBase:
+class BeltBase(object):
     def __init__(self) -> None:
+        super().__init__()
         self.__belt_position = 0
         self.__belt_low_boundary = 0
         self.__belt_high_boundary = 450
@@ -101,21 +104,30 @@ class BeltBase:
         self.move(value)
 
 
-class MoveBase:
+class MoveBase(object):
     def __init__(self) -> None:
-        self.__val_pub = rospy.Publisher("/cmd_vel", cmd_vel, tcp_nodelay=True, queue_size=10)
-        self.__max_line_speed = 3.0
+        super().__init__()
+        self.__vel_pub = rospy.Publisher("/cmd_vel", cmd_vel, tcp_nodelay=True, queue_size=10)
+        self.__vel_msg = cmd_vel()
+        self.__max_line_speed = 4.0
         self.__max_rotate_speed = 10.0
         self.__velocity = {'vx': 0.0, 'vy': 0.0, 'vw': 0.0}
 
     @property
     def velocity(self) -> dict:
         return self.__velocity
-    
+
+    def __publish_vel_msg(self):
+        self.__vel_msg.vx = self.__velocity['vx']
+        self.__vel_msg.vy = self.__velocity['vy']
+        self.__vel_msg.vw = self.__velocity['vw']
+        self.__vel_pub.publish(self.__vel_msg)
+
     def set_velocity(self, vx: float, vy: float, vw: float):
-        self.__velocity['vx'] = max(min(vx, self.__max_line_speed), 0.0)
-        self.__velocity['vy'] = max(min(vy, self.__max_line_speed), 0.0)
-        self.__velocity['vw'] = max(min(vw, self.__max_rotate_speed), 0.0)
+        self.__velocity['vx'] = max(min(vx, self.__max_line_speed), -self.__max_line_speed)
+        self.__velocity['vy'] = max(min(vy, self.__max_line_speed), -self.__max_line_speed)
+        self.__velocity['vw'] = max(min(vw, self.__max_rotate_speed), -self.__max_rotate_speed)
+        self.__publish_vel_msg()
 
     def slide(self, dx: float, dy: float) -> None:
         pass
@@ -126,8 +138,9 @@ class MoveBase:
 
 
 
-class AutoAlignBase:
+class AutoAlignBase(object):
     def __init__(self) -> None:
+        super().__init__()
         self.__align_state = False
         self.__align_pub = rospy.Publisher('/cmd_align', cmd_align, queue_size=2)
         self.__align_msg = cmd_align()

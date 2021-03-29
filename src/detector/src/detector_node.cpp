@@ -56,8 +56,8 @@ void frameCallback(const sensor_msgs::ImageConstPtr& msg)
     common::target_center centmsg;
     std::stringstream ss;
     cv::Mat raw_frame(cv_bridge::toCvShare(msg, "bgr8")->image);
-    int frame_width = raw_frame.cols;
-    int frame_height = raw_frame.rows;
+    int frame_width = raw_frame.rows;
+    int frame_height = raw_frame.cols;
     if (findBiggestContour(raw_frame))
     {
         cv::RotatedRect box = cv::minAreaRect(contours[idx]);
@@ -77,6 +77,7 @@ void frameCallback(const sensor_msgs::ImageConstPtr& msg)
         {
             centmsg.dx = (box.center.x - frame_width / 2) / frame_width;
             centmsg.dy = (box.center.y - frame_height / 2) / frame_height;
+            centmsg.dz = 0;
         }
         
     }
