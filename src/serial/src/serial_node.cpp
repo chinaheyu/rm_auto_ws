@@ -4,56 +4,12 @@
 #include <common/serial_received_msg.h>
 #include <common/serial_send_msg.h>
 #include <chrono>
+#include <thread>
 
 typedef struct
 {
-    uint32_t seq;
-    union
-    {
-        struct
-        {
-            uint32_t sign;
-            float x_gyro;
-            float y_gyro;
-        } frame0;
-
-        struct
-        {
-            float z_gyro;
-            float x_accel;
-            float y_accel;
-        } frame1;
-
-        struct
-        {
-            float z_accel;
-            float x_quat;
-            float y_quat;
-        } frame2;
-
-        struct
-        {
-            float z_quat;
-            float w_quat;
-            uint32_t unused;
-        } frame3;
-    };
-} DataFrame;
-
-// typedef struct
-// {
-//     float x_gyro;
-//     float y_gyro;
-//     float z_gyro;
-//     float x_accel;
-//     float y_accel;
-//     float z_accel;
-//     float x_quat;
-//     float y_quat;
-//     float z_quat;
-//     float w_quat;
-//     uint8_t sign;
-// }__attribute__((packed)) ReceivedMsgStruct;
+    uint8_t sign;
+}__attribute__((packed)) ReceivedMsgStruct;
 
 typedef struct
 {
@@ -128,53 +84,19 @@ int main(int argc, char** argv) try
     ros::Rate loop_rate(50);
     ros::AsyncSpinner spinner(1);
     spinner.start();
-    int next_id = 0;
     int error_cnt = 0;
     while(ros::ok())
     {
-        DataFrame frame_tmp;
-        if (boost::asio::read(sp, boost::asio::buffer(&frame_tmp, sizeof(DataFrame))) == sizeof(DataFrame))
+        ReceivedMsgStruct rxbuf;
+        if (boost::asio::read(sp, boost::asio::buffer(&rxbuf, sizeof(ReceivedMsgStruct))) == sizeof(ReceivedMsgStruct))
         {
-            if (frame_tmp.seq == next_id)
+            if (rxbuf.sign == 0 || rxbuf.sign == 1)
             {
-                switch (next_id)
-                {
-                case 0:
-                    rxmsg.sign = (uint8_t)frame_tmp.frame0.sign;
-                    rxmsg.x_gyro = frame_tmp.frame0.x_gyro;
-                    rxmsg.y_gyro = frame_tmp.frame0.y_gyro;
-                    break;
-                case 1:
-                    rxmsg.z_gyro = frame_tmp.frame1.z_gyro;
-                    rxmsg.x_accel = frame_tmp.frame1.x_accel;
-                    rxmsg.y_accel = frame_tmp.frame1.y_accel;
-                    break;
-                case 2:
-                    rxmsg.z_accel = frame_tmp.frame2.z_accel;
-                    rxmsg.x_quat = frame_tmp.frame2.x_quat;
-                    rxmsg.y_quat = frame_tmp.frame2.y_quat;
-                    break;
-                case 3:
-                    rxmsg.z_quat = frame_tmp.frame3.z_quat;
-                    rxmsg.w_quat = frame_tmp.frame3.w_quat;
-                    if (frame_tmp.frame3.unused == 0xAABB)
-                    {
-                        serial_msg_pub.publish(rxmsg);
-                        error_cnt = 0;
-                    }
-                    
-                    break;
-                }
-
-                next_id++;
-                if (next_id > 3)
-                {
-                    next_id = 0;
-                }
+                rxmsg.sign = rxbuf.sign;
+                serial_msg_pub.publish(rxmsg);
             }
             else
             {
-                next_id = 0;
                 error_cnt++;
 
                 // Auto reconnect
@@ -182,7 +104,7 @@ int main(int argc, char** argv) try
                 {
                     ROS_INFO("Serial is connecting...");
                     sp.close();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(500));
                     if (openSerialPort(serial_port_name.c_str()))
                     {
                         ROS_INFO("Open serial port successful.");

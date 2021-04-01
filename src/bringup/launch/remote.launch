@@ -1,0 +1,6 @@
+<launch>
+    <machine name="manifold2" address="192.168.1.124" default="true" user="dji" password="dji" env-loader="/opt/ros/kinetic/env.sh"/>
+    <machine name="local-pc" address="127.0.0.1"/>
+    <include file="$(find bringup)/launch/default.launch"/>
+    <node machine="local-pc" pkg="observer" name="observer" type="observer_node.py" output="screen"/>
+</launch>

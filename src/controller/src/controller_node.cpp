@@ -4,8 +4,9 @@
 #include <common/cmd_vel.h>
 #include <common/serial_received_msg.h>
 #include <common/serial_send_msg.h>
-#include <sensor_msgs/Imu.h>
 #include <mutex>
+#include <nav_msgs/Odometry.h>
+
 
 std::mutex mux;
 common::serial_send_msg send_buf;
@@ -63,27 +64,12 @@ void cmdBeltCallback(const common::cmd_belt::ConstPtr& msg)
 void serialReceivedCallback(const common::serial_received_msg::ConstPtr& msg)
 {
     sign = msg->sign;
-    sensor_msgs::Imu img_msg;
-    img_msg.header.frame_id = "base_link";
-    img_msg.header.stamp = ros::Time::now();
-    img_msg.angular_velocity.x = msg->x_gyro;
-    img_msg.angular_velocity.y = msg->y_gyro;
-    img_msg.angular_velocity.z = msg->z_gyro;
-    img_msg.linear_acceleration.x = msg->x_accel;
-    img_msg.linear_acceleration.y = msg->y_accel;
-    img_msg.linear_acceleration.z = msg->z_accel;
-    img_msg.orientation.x = msg->x_quat;
-    img_msg.orientation.y = msg->y_quat;
-    img_msg.orientation.z = msg->z_quat;
-    img_msg.orientation.w = msg->w_quat;
-    imu_pub.publish(img_msg);
 }
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "controller");
     ros::NodeHandle n;
-    imu_pub = n.advertise<sensor_msgs::Imu>("/imu_msg", 10);
     ros::Publisher serial_pub = n.advertise<common::serial_send_msg>("/serial_send_msg", 10);
     ros::Subscriber serial_sub = n.subscribe("/serial_received_msg", 10, serialReceivedCallback);
     ros::Subscriber vel_sub = n.subscribe("/cmd_vel", 10, cmdVelCallback);
@@ -96,7 +82,7 @@ int main(int argc, char **argv)
     spinner.start();
     while (ros::ok())
     {
-        if (sign == (uint8_t)1 || sign == (uint8_t)2)
+        if (sign == 1)
         {
             mux.lock();
             send_buf.sign = 1;

@@ -21,13 +21,13 @@ class GUI(QWidget):
     def __init__(self):
         super(GUI, self).__init__()
         self.is_depth_frame = False
-        self.robot = Robot()
-        self.image_sub = rospy.Subscriber('/test_frame/compressed', CompressedImage, self.frame_received_callback, queue_size=1)
+        self.robot = Robot('observer')
+        self.image_sub = rospy.Subscriber('/camera/color/image_raw/compressed', CompressedImage, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
         self.serial_send_sub = rospy.Subscriber('/serial_send_msg', serial_send_msg, self.serial_send_callback, queue_size=1)
         self.serial_received_sub = rospy.Subscriber('/serial_received_msg', serial_received_msg, self.serial_received_callback, queue_size=1)
         self.align_state_sub = rospy.Subscriber('/align_state', Bool, self.align_state_callback, queue_size=1)
         self.bridge = CvBridge()
-        self.test_line_speed = 3
+        self.test_line_speed = 2
         self.test_rotate_speed = 7
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -79,27 +79,29 @@ class GUI(QWidget):
 
     def align_state_callback(self, msg):
         msg_tmp = 'align state: {}'.format(msg.data)
+        if msg.data == False:
+            self.ui.radioButton_color.click()
         self.align_state_signal.emit(msg_tmp)
 
     @Slot()
     def test_checked(self):
         self.is_depth_frame = False
         self.image_sub.unregister()
-        self.image_sub = rospy.Subscriber('/test_frame/compressed', CompressedImage, self.frame_received_callback, queue_size=1)
+        self.image_sub = rospy.Subscriber('/test_frame/compressed', CompressedImage, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
         print('test_checked')
 
     @Slot()
     def color_checked(self):
         self.is_depth_frame = False
         self.image_sub.unregister()
-        self.image_sub = rospy.Subscriber('/camera/color/image_raw/compressed', CompressedImage, self.frame_received_callback, queue_size=1)
+        self.image_sub = rospy.Subscriber('/camera/color/image_raw/compressed', CompressedImage, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
         print('color_checked')
 
     @Slot()
     def depth_checked(self):
         self.is_depth_frame = True
         self.image_sub.unregister()
-        self.image_sub = rospy.Subscriber('/camera/aligned_depth_to_color/image_raw', Image, self.frame_received_callback, queue_size=1)
+        self.image_sub = rospy.Subscriber('/camera/aligned_depth_to_color/image_raw', Image, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
         print('depth_checked')
     
     @Slot()
@@ -190,6 +192,7 @@ class GUI(QWidget):
     @Slot()
     def auto_align_clicked(self):
         self.robot.alignToOre()
+        self.ui.radioButton_test.click()
         print('auto_align_clicked')
 
     @Slot()

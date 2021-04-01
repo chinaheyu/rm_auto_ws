@@ -20,7 +20,24 @@ void centerMsgCallback(const common::target_center::ConstPtr& msg)
             common::cmd_vel vel_msg;
             if (with_depth)
             {
-                /* code */
+                if (std::abs(msg->dx) > 0.01)
+                {
+                    vel_msg.vx = align_kp * msg->dx;
+                    vel_msg.vy = 0;
+                    vel_msg.vw = 0;
+                    vel_pub.publish(vel_msg);
+                }
+                else
+                {
+                    vel_msg.vx = 0;
+                    vel_msg.vy = 0;
+                    vel_msg.vw = 0;
+                    vel_pub.publish(vel_msg);
+                    is_align = false;
+                    std_msgs::Bool bool_msg;
+                    bool_msg.data = is_align;
+                    state_pub.publish(bool_msg);
+                }
             }
             else
             {
@@ -33,6 +50,10 @@ void centerMsgCallback(const common::target_center::ConstPtr& msg)
                 }
                 else
                 {
+                    vel_msg.vx = 0;
+                    vel_msg.vy = 0;
+                    vel_msg.vw = 0;
+                    vel_pub.publish(vel_msg);
                     is_align = false;
                     std_msgs::Bool bool_msg;
                     bool_msg.data = is_align;

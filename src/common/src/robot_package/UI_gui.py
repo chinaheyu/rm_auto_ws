@@ -88,12 +88,13 @@ class Ui_Form(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.radioButton_test = QRadioButton(self.groupBox_3)
         self.radioButton_test.setObjectName(u"radioButton_test")
-        self.radioButton_test.setChecked(True)
+        self.radioButton_test.setChecked(False)
 
         self.horizontalLayout_4.addWidget(self.radioButton_test)
 
         self.radioButton_color = QRadioButton(self.groupBox_3)
         self.radioButton_color.setObjectName(u"radioButton_color")
+        self.radioButton_color.setChecked(True)
 
         self.horizontalLayout_4.addWidget(self.radioButton_color)
 

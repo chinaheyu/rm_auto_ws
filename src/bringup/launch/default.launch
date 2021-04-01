@@ -1,9 +1,6 @@
 <launch>
     <param name="with_depth" type="bool" value="true"/>
-    <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch">
-        <arg name="depth_fps" value="60"/>
-        <arg name="color_fps" value="60"/>
-    </include>
+    <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch"/>
     <include file="$(find serial)/launch/default.launch"/>
     <include file="$(find detector)/launch/default.launch"/>
     <include file="$(find controller)/launch/default.launch"/>

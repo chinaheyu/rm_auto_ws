@@ -4,14 +4,12 @@ from common.msg import cmd_vel
 from common.msg import cmd_action
 from common.msg import cmd_belt
 from common.msg import cmd_align
-from sensor_msgs.msg import Imu
 from std_msgs.msg import Bool
 
 
 class ROSBase(object):
     def __init__(self) -> None:
         super().__init__()
-        rospy.init_node("flow_control")
 
     def echo(self, message: str) -> None:
         rospy.loginfo(message)
@@ -110,7 +108,7 @@ class MoveBase(object):
         self.__vel_pub = rospy.Publisher("/cmd_vel", cmd_vel, tcp_nodelay=True, queue_size=10)
         self.__vel_msg = cmd_vel()
         self.__max_line_speed = 4.0
-        self.__max_rotate_speed = 10.0
+        self.__max_rotate_speed = 20.0
         self.__velocity = {'vx': 0.0, 'vy': 0.0, 'vw': 0.0}
 
     @property
@@ -164,5 +162,6 @@ class AutoAlignBase(object):
 
 
 class Robot(ROSBase, ActionBase, BeltBase, MoveBase, AutoAlignBase):
-    def __init__(self):
+    def __init__(self, node_name: str):
+        rospy.init_node(node_name)
         super().__init__()
