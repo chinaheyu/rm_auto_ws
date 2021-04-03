@@ -5,6 +5,7 @@ from common.msg import cmd_action
 from common.msg import cmd_belt
 from common.msg import cmd_align
 from std_msgs.msg import Bool
+from nav_msgs.msg import Odometry
 
 
 class ROSBase(object):
@@ -106,10 +107,15 @@ class MoveBase(object):
     def __init__(self) -> None:
         super().__init__()
         self.__vel_pub = rospy.Publisher("/cmd_vel", cmd_vel, tcp_nodelay=True, queue_size=10)
+        rospy.Subscriber("/odometry", Odometry, self.__odom_callback, queue_size=10, tcp_nodelay=True)
         self.__vel_msg = cmd_vel()
         self.__max_line_speed = 4.0
         self.__max_rotate_speed = 20.0
         self.__velocity = {'vx': 0.0, 'vy': 0.0, 'vw': 0.0}
+
+    def __odom_callback(self, data) -> None:
+        # TODO: Add a property of oodometry.
+        pass
 
     @property
     def velocity(self) -> dict:
@@ -128,9 +134,11 @@ class MoveBase(object):
         self.__publish_vel_msg()
 
     def slide(self, dx: float, dy: float) -> None:
+        # TODO: Move a fixed distanse with the help of odometry.
         pass
 
     def rotate(self, degree: float) -> None:
+        # TODO: Rotate a fixed angle with the help of odometry.
         pass
 
 

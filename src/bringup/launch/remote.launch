@@ -3,4 +3,5 @@
     <machine name="local-pc" address="127.0.0.1"/>
     <include file="$(find bringup)/launch/default.launch"/>
     <node machine="local-pc" pkg="observer" name="observer" type="observer_node.py" output="screen"/>
+    <!-- FIXME: Cannot launch nodes at manifold2 remotely. -->
 </launch>

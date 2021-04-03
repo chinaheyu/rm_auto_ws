@@ -1,0 +1,10 @@
+<launch>
+    <param name="with_depth" type="bool" value="false"/>
+    <include file="$(find monocular_camera)/launch/default.launch"/>
+    <include file="$(find detector)/launch/default.launch"/>
+    <include file="$(find controller)/launch/default.launch"/>
+    <include file="$(find auto_align)/launch/default.launch"/>
+    <include file="$(find flow_control)/launch/default.launch"/>
+    <include file="$(find turtle_bridge)/launch/default.launch"/>
+    <include file="$(find observer)/launch/default.launch"/>
+</launch>

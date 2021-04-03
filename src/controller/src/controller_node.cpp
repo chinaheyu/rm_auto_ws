@@ -12,6 +12,7 @@ std::mutex mux;
 common::serial_send_msg send_buf;
 ros::Publisher imu_pub;
 uint8_t sign;
+ros::Publisher odom_pub;
 
 void cmdVelCallback(const common::cmd_vel::ConstPtr& msg)
 {
@@ -64,6 +65,9 @@ void cmdBeltCallback(const common::cmd_belt::ConstPtr& msg)
 void serialReceivedCallback(const common::serial_received_msg::ConstPtr& msg)
 {
     sign = msg->sign;
+    nav_msgs::Odometry odom_msg;
+    // TODO: Publish odometry msg
+    odom_pub.publish(odom_msg);
 }
 
 int main(int argc, char **argv)
@@ -75,7 +79,7 @@ int main(int argc, char **argv)
     ros::Subscriber vel_sub = n.subscribe("/cmd_vel", 10, cmdVelCallback);
     ros::Subscriber act_sub = n.subscribe("/cmd_action", 10, cmdActionCallback);
     ros::Subscriber belt_sub = n.subscribe("/cmd_belt", 10, cmdBeltCallback);
-
+    odom_pub = n.advertise<nav_msgs::Odometry>("/odometry", 10);
     ros::Rate loop_rate(50);
 
     ros::AsyncSpinner spinner(4);

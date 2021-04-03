@@ -3,7 +3,7 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 import sys
-from robot_package.UI_gui import Ui_Form
+from gui_package.UI_gui import Ui_Form
 from robot_package.robot import Robot
 from cv_bridge import CvBridge
 import rospy
@@ -27,8 +27,8 @@ class GUI(QWidget):
         self.serial_received_sub = rospy.Subscriber('/serial_received_msg', serial_received_msg, self.serial_received_callback, queue_size=1)
         self.align_state_sub = rospy.Subscriber('/align_state', Bool, self.align_state_callback, queue_size=1)
         self.bridge = CvBridge()
-        self.test_line_speed = 2
-        self.test_rotate_speed = 7
+        self.test_line_speed = 2.0
+        self.test_rotate_speed = 6.0
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.ui.pushButton_forward.pressed.connect(self.forward_pressed)

@@ -1,0 +1,7 @@
+<launch>
+    <param name="~background_b" type="int" value="182"/>
+    <param name="~background_g" type="int" value="182"/>
+    <param name="~background_r" type="int" value="182"/>
+    <node pkg="turtle_bridge" name="turtle_bridge" type="turtle_bridge_node" output="screen" />
+    <node pkg="turtlesim" name="turtlesim" type="turtlesim_node" output="screen" />
+</launch>
