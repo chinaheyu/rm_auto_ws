@@ -2,10 +2,11 @@
 from robot_package.robot import Robot
 import time
 
+
 if __name__ == '__main__':
     robot = Robot('flow_control')
     robot.echo('Flow control start.')
     while not robot.is_shutdown:
-        pass
+        if robot.can_control:
+            pass
     
-

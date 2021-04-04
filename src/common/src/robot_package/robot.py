@@ -1,4 +1,5 @@
 import time
+import math
 import rospy
 from common.msg import cmd_vel
 from common.msg import cmd_action
@@ -6,14 +7,24 @@ from common.msg import cmd_belt
 from common.msg import cmd_align
 from std_msgs.msg import Bool
 from nav_msgs.msg import Odometry
+from tf.transformations import euler_from_quaternion
 
 
 class ROSBase(object):
     def __init__(self) -> None:
         super().__init__()
+        rospy.Subscriber('/sign', Bool, self.__sign_callback, queue_size=10)
+        self.__can_control = False
 
     def echo(self, message: str) -> None:
         rospy.loginfo(message)
+
+    def __sign_callback(self, msg) -> None:
+        self.__can_control = msg.data
+    
+    @property
+    def can_control(self) -> bool:
+        return self.__can_control
 
     @property
     def is_shutdown(self) -> bool:
@@ -112,10 +123,24 @@ class MoveBase(object):
         self.__max_line_speed = 4.0
         self.__max_rotate_speed = 20.0
         self.__velocity = {'vx': 0.0, 'vy': 0.0, 'vw': 0.0}
+        self.__odometry = {'x': 0.0, 'y': 0.0, 'w': 0.0, 'vx': 0.0, 'vy': 0.0, 'vw': 0.0}
 
     def __odom_callback(self, data) -> None:
-        # TODO: Add a property of oodometry.
-        pass
+        self.__odometry['x'] = data.pose.pose.position.x
+        self.__odometry['y'] = data.pose.pose.position.y
+        self.__odometry['w'] = euler_from_quaternion((
+            data.pose.pose.orientation.x,
+            data.pose.pose.orientation.y,
+            data.pose.pose.orientation.z,
+            data.pose.pose.orientation.w
+        ))[2]
+        self.__odometry['vx'] = data.twist.twist.linear.x
+        self.__odometry['vy'] = data.twist.twist.linear.y
+        self.__odometry['vw'] = data.twist.twist.angular.z
+
+    @property
+    def odometry(self) -> dict:
+        return self.__odometry
 
     @property
     def velocity(self) -> dict:
@@ -134,14 +159,42 @@ class MoveBase(object):
         self.__publish_vel_msg()
 
     def slide(self, dx: float, dy: float) -> None:
-        # TODO: Move a fixed distanse with the help of odometry.
-        pass
+        target_x = self.__odometry['x'] + dx
+        target_y = self.__odometry['y'] + dy
+        vx = 0.0
+        vy = 0.0
+        while True:
+            if abs(error := target_x - self.__odometry['x']) > 0.01:
+                vx = 2.0 * error
+            else: vx = 0.0
+            if abs(error := target_y - self.__odometry['y']) > 0.01:
+                vy = 2.0 * error
+            else: vy = 0.0
+            if vx == 0 and vy == 0:
+                break
+            self.set_velocity(vx, vy, 0)
+        self.stop()
 
     def rotate(self, degree: float) -> None:
-        # TODO: Rotate a fixed angle with the help of odometry.
-        pass
-
-
+        begin_w = self.__odometry['w']
+        target = begin_w + degree / 180.0 * math.pi
+        while target > math.pi:
+            target -= 2 * math.pi
+        while target <= -math.pi:
+            target += 2 * math.pi
+        while True:
+            error = target - self.__odometry['w']
+            if error <= -math.pi:
+                error += 2 * math.pi
+            if error > math.pi:
+                error -= 2 * math.pi
+            if abs(error) < 0.01:
+                break
+            self.set_velocity(0, 0, 5.0 * error)
+        self.stop()
+    
+    def stop(self) -> None:
+        self.set_velocity(0, 0, 0)
 
 
 class AutoAlignBase(object):

@@ -56,6 +56,29 @@ class GUI(QWidget):
         self.serial_send_signal.connect(self.ui.plainTextEdit_send.setPlainText)
         self.serial_received_signal.connect(self.ui.plainTextEdit_received.setPlainText)
         self.align_state_signal.connect(self.ui.plainTextEdit_align.setPlainText)
+        self.tim1 = QTimer(self)
+        self.tim1.timeout.connect(self.update_odom)
+        self.tim1.setInterval(100)
+        self.tim1.start()
+        self.tim2 = QTimer(self)
+        self.tim2.timeout.connect(self.shut_node)
+        self.tim2.setInterval(200)
+        self.tim2.start()
+
+    @Slot()
+    def shut_node(self):
+        if self.robot.is_shutdown:
+            self.close()
+
+    @Slot()
+    def update_odom(self):
+        tmp = self.robot.odometry
+        self.ui.label_x.setText('x: {:.3f}'.format(tmp['x']))
+        self.ui.label_y.setText('y: {:.3f}'.format(tmp['y']))
+        self.ui.label_w.setText('w: {:.3f}'.format(tmp['w']))
+        self.ui.label_vx.setText('vx: {:.3f}'.format(tmp['vx']))
+        self.ui.label_vy.setText('vy: {:.3f}'.format(tmp['vy']))
+        self.ui.label_vw.setText('vw: {:.3f}'.format(tmp['vw']))
 
     def frame_received_callback(self, msg):
         if self.is_depth_frame:
@@ -88,117 +111,95 @@ class GUI(QWidget):
         self.is_depth_frame = False
         self.image_sub.unregister()
         self.image_sub = rospy.Subscriber('/test_frame/compressed', CompressedImage, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
-        print('test_checked')
 
     @Slot()
     def color_checked(self):
         self.is_depth_frame = False
         self.image_sub.unregister()
         self.image_sub = rospy.Subscriber('/camera/color/image_raw/compressed', CompressedImage, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
-        print('color_checked')
 
     @Slot()
     def depth_checked(self):
         self.is_depth_frame = True
         self.image_sub.unregister()
         self.image_sub = rospy.Subscriber('/camera/aligned_depth_to_color/image_raw', Image, self.frame_received_callback, queue_size=1, tcp_nodelay=True)
-        print('depth_checked')
     
     @Slot()
     def forward_pressed(self):
         self.robot.set_velocity(self.test_line_speed, 0, 0)
-        print('forward_pressed')
 
     @Slot()
     def forward_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('forward_released')
 
     @Slot()
     def back_pressed(self):
         self.robot.set_velocity(-self.test_line_speed, 0, 0)
-        print('back_pressed')
 
     @Slot()
     def back_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('back_released')
 
     @Slot()
     def left_pressed(self):
         self.robot.set_velocity(0, self.test_line_speed, 0)
-        print('left_pressed')
 
     @Slot()
     def left_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('left_released')
 
     @Slot()
     def right_pressed(self):
         self.robot.set_velocity(0, -self.test_line_speed, 0)
-        print('right_pressed')
 
     @Slot()
     def right_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('right_released')
 
     @Slot()
     def rleft_pressed(self):
         self.robot.set_velocity(0, 0, self.test_rotate_speed)
-        print('rleft_pressed')
 
     @Slot()
     def rleft_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('rleft_released')
 
     @Slot()
     def rright_pressed(self):
         self.robot.set_velocity(0, 0, -self.test_rotate_speed)
-        print('rright_pressed')
 
     @Slot()
     def rright_released(self):
         self.robot.set_velocity(0, 0, 0)
-        print('rright_released')
 
     @Slot()
     def body_lift_clicked(self):
         self.robot.raise_body()
-        print('body_lift_clicked')
 
     @Slot()
     def grasp_clicked(self):
         self.robot.grasp()
-        print('grasp_clicked')
 
     @Slot()
     def push_clicked(self):
         self.robot.push()
-        print('push_clicked')
 
     @Slot()
     def camera_lift_clicked(self):
         self.robot.raise_camera()
-        print('camera_lift_clicked')
 
     @Slot()
     def flip_clicked(self):
         self.robot.flip()
-        print('flip_clicked')
 
     @Slot()
     def auto_align_clicked(self):
         self.robot.alignToOre()
         self.ui.radioButton_test.click()
-        print('auto_align_clicked')
 
     @Slot()
     def belt_value_changed(self, value):
         self.robot.move_belt(value)
-        print(f'belt_value_changed: {value}')
 
 
 if __name__ == '__main__':

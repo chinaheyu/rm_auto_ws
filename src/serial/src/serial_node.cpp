@@ -9,7 +9,13 @@
 typedef struct
 {
     uint8_t sign;
-}__attribute__((packed)) ReceivedMsgStruct;
+    int16_t gyro_angle;
+    int16_t gyro_rate;
+    int32_t position_x_mm;
+    int32_t position_y_mm;
+    int16_t v_x_mm;
+    int16_t v_y_mm;
+} __attribute__((packed)) ReceivedMsgStruct;
 
 typedef struct
 {
@@ -93,6 +99,12 @@ int main(int argc, char** argv) try
             if (rxbuf.sign == 0 || rxbuf.sign == 1)
             {
                 rxmsg.sign = rxbuf.sign;
+                rxmsg.position_x_mm = rxbuf.position_x_mm;
+                rxmsg.position_y_mm = rxbuf.position_y_mm;
+                rxmsg.gyro_angle = rxbuf.gyro_angle;
+                rxmsg.gyro_rate = rxbuf.gyro_rate;
+                rxmsg.v_x_mm = rxbuf.v_x_mm;
+                rxmsg.v_y_mm = rxbuf.v_y_mm;
                 serial_msg_pub.publish(rxmsg);
             }
             else

@@ -214,6 +214,68 @@ class Ui_Form(object):
 
         self.groupBox_4 = QGroupBox(Form)
         self.groupBox_4.setObjectName(u"groupBox_4")
+        self.gridLayout_3 = QGridLayout(self.groupBox_4)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.label_x = QLabel(self.groupBox_4)
+        self.label_x.setObjectName(u"label_x")
+
+        self.gridLayout_3.addWidget(self.label_x, 0, 0, 1, 1)
+
+        self.label_6 = QLabel(self.groupBox_4)
+        self.label_6.setObjectName(u"label_6")
+
+        self.gridLayout_3.addWidget(self.label_6, 0, 1, 1, 1)
+
+        self.label_vx = QLabel(self.groupBox_4)
+        self.label_vx.setObjectName(u"label_vx")
+
+        self.gridLayout_3.addWidget(self.label_vx, 0, 2, 1, 1)
+
+        self.label_10 = QLabel(self.groupBox_4)
+        self.label_10.setObjectName(u"label_10")
+
+        self.gridLayout_3.addWidget(self.label_10, 0, 3, 1, 1)
+
+        self.label_y = QLabel(self.groupBox_4)
+        self.label_y.setObjectName(u"label_y")
+
+        self.gridLayout_3.addWidget(self.label_y, 1, 0, 1, 1)
+
+        self.label_5 = QLabel(self.groupBox_4)
+        self.label_5.setObjectName(u"label_5")
+
+        self.gridLayout_3.addWidget(self.label_5, 1, 1, 1, 1)
+
+        self.label_vy = QLabel(self.groupBox_4)
+        self.label_vy.setObjectName(u"label_vy")
+
+        self.gridLayout_3.addWidget(self.label_vy, 1, 2, 1, 1)
+
+        self.label_11 = QLabel(self.groupBox_4)
+        self.label_11.setObjectName(u"label_11")
+
+        self.gridLayout_3.addWidget(self.label_11, 1, 3, 1, 1)
+
+        self.label_w = QLabel(self.groupBox_4)
+        self.label_w.setObjectName(u"label_w")
+
+        self.gridLayout_3.addWidget(self.label_w, 2, 0, 1, 1)
+
+        self.label_4 = QLabel(self.groupBox_4)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_3.addWidget(self.label_4, 2, 1, 1, 1)
+
+        self.label_vw = QLabel(self.groupBox_4)
+        self.label_vw.setObjectName(u"label_vw")
+
+        self.gridLayout_3.addWidget(self.label_vw, 2, 2, 1, 1)
+
+        self.label_12 = QLabel(self.groupBox_4)
+        self.label_12.setObjectName(u"label_12")
+
+        self.gridLayout_3.addWidget(self.label_12, 2, 3, 1, 1)
+
 
         self.verticalLayout_2.addWidget(self.groupBox_4)
 
@@ -257,5 +319,17 @@ class Ui_Form(object):
         self.pushButton_flip.setText(QCoreApplication.translate("Form", u"flip", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("Form", u"Belt", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Form", u"Robot infomation", None))
+        self.label_x.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_6.setText(QCoreApplication.translate("Form", u"m", None))
+        self.label_vx.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_10.setText(QCoreApplication.translate("Form", u"m/s", None))
+        self.label_y.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"m", None))
+        self.label_vy.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_11.setText(QCoreApplication.translate("Form", u"m/s", None))
+        self.label_w.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"rad", None))
+        self.label_vw.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.label_12.setText(QCoreApplication.translate("Form", u"rad/s", None))
     # retranslateUi
 

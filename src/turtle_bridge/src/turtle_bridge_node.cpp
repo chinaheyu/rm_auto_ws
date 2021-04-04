@@ -4,6 +4,7 @@
 #include <common/serial_received_msg.h>
 #include <turtlesim/Pose.h>
 #include <turtlesim/SetPen.h>
+#include <cmath>
 
 ros::Publisher turtle_pub;
 ros::Publisher fake_pub;
@@ -65,7 +66,11 @@ void poseCallback(const turtlesim::Pose::ConstPtr &data)
 
     common::serial_received_msg msg;
     msg.sign = 1;
-    // TODO: Publish pose message from turtle1
+    msg.position_x_mm = int(data->x * 1000.0);
+    msg.position_y_mm = int(data->y * 1000.0);
+    msg.gyro_angle = int16_t(data->theta / M_PI * 1800.0);
+    msg.gyro_rate = int16_t(data->angular_velocity / M_PI * 1800.0);
+    // TODO: Publish turtle's linear velocity.
     fake_pub.publish(msg);
 }
 
