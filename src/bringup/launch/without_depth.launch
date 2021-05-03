@@ -6,4 +6,5 @@
     <include file="$(find controller)/launch/default.launch"/>
     <include file="$(find auto_align)/launch/default.launch"/>
     <include file="$(find flow_control)/launch/default.launch"/>
+    <include file="$(find referee_system)/launch/default.launch"/>
 </launch>

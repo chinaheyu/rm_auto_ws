@@ -1,12 +1,33 @@
 <launch>
     <param name="with_depth" type="bool" value="true"/>
-    <include file="$(find realsense2_camera)/launch/rs_aligned_depth.launch">
-        <arg name="depth_fps" value="60"/>
-        <arg name="color_fps" value="60"/>
-    </include>
     <include file="$(find serial)/launch/default.launch"/>
     <include file="$(find detector)/launch/default.launch"/>
     <include file="$(find controller)/launch/default.launch"/>
     <include file="$(find auto_align)/launch/default.launch"/>
     <include file="$(find flow_control)/launch/default.launch"/>
+    <include file="$(find referee_system)/launch/default.launch"/>
+
+    <group ns="camera">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="output"                   value="log"/>
+
+            <arg name="enable_pointcloud"        value="false"/>
+            <arg name="enable_sync"              value="true"/>
+            <arg name="align_depth"              value="true"/>
+
+            <arg name="depth_width"              value="640"/>
+            <arg name="depth_height"             value="480"/>
+            <arg name="enable_depth"             value="true"/>
+
+            <arg name="color_width"              value="640"/>
+            <arg name="color_height"             value="480"/>
+            <arg name="enable_color"             value="true"/>
+
+            <arg name="depth_fps"                value="60"/>
+            <arg name="color_fps"                value="60"/>
+            <arg name="enable_gyro"              value="false"/>
+            <arg name="enable_accel"             value="false"/>
+
+        </include>
+    </group>
 </launch>

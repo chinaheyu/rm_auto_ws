@@ -84,7 +84,8 @@ int main(int argc, char** argv)
     state_pub = n.advertise<std_msgs::Bool>("/align_state", 1);
     vel_pub = n.advertise<common::cmd_vel>("/cmd_vel", 1);
 
-    ros::spin();
+    ros::MultiThreadedSpinner spinner(2);
+    spinner.spin();
 
     return 0;
 }

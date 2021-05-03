@@ -1,23 +1,23 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(serial)
+project(referee_system)
 
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  std_msgs
   common
+  roscpp
 )
 
 catkin_package(
-
 )
 
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(${PROJECT_NAME}_node src/serial_node.cpp)
+aux_source_directory(src DIR_SRCS)
+add_executable(${PROJECT_NAME}_node ${DIR_SRCS})
 
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 

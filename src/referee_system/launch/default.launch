@@ -1,0 +1,5 @@
+<launch>
+    <arg name="referee_serial_port" default="/dev/ttyTHS2"/>
+    <param name="referee_serial_port_name" type="string" value="$(arg referee_serial_port)"/>
+    <node pkg="referee_system" name="referee_system" type="referee_system_node" output="screen"/>
+</launch>

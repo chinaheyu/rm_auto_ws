@@ -1,5 +1,5 @@
 <launch>
-    <arg name="serial_port" default="/dev/ttyTHS2"/>
+    <arg name="serial_port" default="/dev/ttyS0"/>
     <param name="serial_port_name" type="string" value="$(arg serial_port)"/>
     <node pkg="serial" name="serial" type="serial_node" output="screen"/>
 </launch>

@@ -22,7 +22,10 @@ bool with_depth;
 image_transport::Publisher pub;
 cv::Scalar thresh1(8, 110, 0);
 cv::Scalar thresh2(30, 255, 255);
+
+// Filter the small area.
 double min_area_size = 200;
+
 std::vector<std::vector<cv::Point> > contours;
 int idx;
 ros::Publisher pubcenter;
