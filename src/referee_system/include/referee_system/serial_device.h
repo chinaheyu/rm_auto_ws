@@ -21,7 +21,7 @@ private:
 
 
 public:
-    explicit SerialDevice(const std::string &serial_name, size_t buffer_size = 500) : sp(io_s), max_buffer_size(buffer_size), thread_run_state(false), read_thread(&SerialDevice::transferDataToBuffer, this) {
+    explicit SerialDevice(const std::string &serial_name, size_t buffer_size = 500) : sp(io_s) {
         boost::system::error_code ec;
         sp.open(serial_name, ec);
         if (ec) {

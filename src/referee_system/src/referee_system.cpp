@@ -242,14 +242,25 @@ void RefereeSystem::deleteAll(uint16_t sender_ID, uint16_t receiver_ID) {
 }
 
 void RefereeSystem::drawGuideLine(uint16_t sender_ID, uint16_t receiver_ID, uint8_t layer) {
+    /* TODO
+    ** - [x] Add key cheet sheets.
+    ** - [ ] Adjust guide line.
+    */
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"bd1", layer, 1047, 603, 1391, 1080, 3, 4);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"bd2", layer, 873, 603, 529, 1080, 3, 4);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"bd3", layer, 1127, 603, 1471, 1080, 3, 6);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"bd4", layer, 793, 603, 449, 1080, 3, 6);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"or1", layer, 1091, 659, 1091, 875, 3, 2);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawLine(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"or2", layer, 829, 659, 829, 875, 3, 2);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
     drawString(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"sch", layer, 40, 830, 240, (uint8_t*)"WUST NB", 7, 4, 2);
-    drawString(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"key", layer, 16, 1540, 380, (uint8_t*)"QF\nZZ\nXXXX\nCCC\nVVVVV", 7, 2, 2);
+    std::this_thread::sleep_for(std::chrono::microseconds(500));
+    drawString(RED_ENGINEER_ROBOT, RED_ENGINEER_CLIENT, (uint8_t*)"key", layer, 24, 1540, 380, (uint8_t*)"QF\nZZ\nXXXX\nCCC\nVVVVV", 20, 3, 2);
 }
 
 #ifdef REFEREE_SCREEN_COORD_TRANS
